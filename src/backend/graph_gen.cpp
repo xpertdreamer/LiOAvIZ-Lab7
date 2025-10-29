@@ -78,3 +78,56 @@ void print_list(const std::vector<std::vector<int> > &list, const char* name) {
         std::cout << std::endl;
     }
 }
+
+void DFS(const int v, const Graph &graph, bool *visited) {
+    visited[v] = true;
+
+    std::cout << std::setw(3) << v << " ";
+
+    for (int i = 0; i < graph.n; i++) {
+        if (graph.adj_matrix[v][i] == 1 && visited[i] == false) DFS(i, graph, visited);
+    }
+}
+
+extern void prep(const Graph& graph, const int vert) {
+    const auto visited = new bool[graph.n];
+    for (int i = 0; i < graph.n; i++) {
+        visited[i] = false;
+    }
+
+    for (int v = vert; v < graph.n; v++) {
+        if (visited[v] == false) {
+            DFS(v, graph, visited);
+        }
+    }
+
+    std::cout << std::endl;
+    delete[] visited;
+}
+
+void DFS_list(const int v, const Graph &graph, bool *visited) {
+    visited[v] = true;
+    std::cout << std::setw(3) << v << " ";
+
+    for (const int neighbour : graph.adj_list[v]) {
+        if (visited[neighbour] == false) {
+            DFS_list(neighbour, graph, visited);
+        }
+    }
+}
+
+void prep_list(const Graph &graph, const int vert) {
+    const auto visited = new bool[graph.n];
+    for (int i = 0; i < graph.n; i++) {
+        visited[i] = false;
+    }
+
+    for (int v = vert; v < graph.n; v++) {
+        if (visited[v] == false) {
+            DFS_list(v, graph, visited);
+        }
+    }
+
+    std::cout << std::endl;
+    delete[] visited;
+}

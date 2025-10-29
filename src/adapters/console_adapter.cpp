@@ -144,6 +144,13 @@ void GraphConsoleAdapter::register_graph_commands() {
         [this](const std::vector<std::string>&) { this->cmd_history(); },
             "Show history of commands"
     );
+
+    console.register_command("DFS",
+        [this](const std::vector<std::string>& args) { this->cmd_traversal(args); },
+        "DFS traversal",
+        {"vertex, --representation"},
+        "DFS <v> <--representation>"
+    );
 }
 
 void GraphConsoleAdapter::cmd_create(const std::vector<std::string>& args) {
@@ -216,4 +223,32 @@ void GraphConsoleAdapter::cmd_help(const std::vector<std::string>& args) {
 
 void GraphConsoleAdapter::cmd_history() {
     console.show_history();
+}
+
+void GraphConsoleAdapter::cmd_traversal(const std::vector<std::string> &args) const {
+    if (!graphs_created) {
+        std::cout << "No graphs created. Use 'create' command first." << std::endl;
+        return;
+    }
+
+    if (args.size() < 2 || args.size() > 2) {
+        std::cout << "Usage: DFS <v> <representation>" << std::endl;
+        return;
+    }
+
+    try {
+        const auto v = std::stoi(args[0]);
+        const auto& rep = args[1];
+        if (v > graph->n || v < 0) {
+            std::cout << "Invalid number of vertices." << std::endl;
+            return;
+        }
+        if (rep != "--list" && rep != "--matrix") {
+            std::cout << "Invalid representation." << std::endl;
+            return;
+        }
+        rep == "--matrix" ? prep(*graph, v) : prep_list(*graph, v);
+    } catch (const std::exception& e) {
+        std::cout << "Error DFS: " << e.what() << std::endl;
+    }
 }

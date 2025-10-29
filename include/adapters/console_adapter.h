@@ -36,6 +36,8 @@ class GraphConsoleAdapter {
     void cmd_exit();
     void cmd_help(const std::vector<std::string>& args);
     void cmd_history();
+    void cmd_traversal(const std::vector<std::string>& args) const;
+    void cmd_traversal_list(const std::vector<std::string>& args) const;
 };
 
 #endif //CONSOLE_ADAPTER_H

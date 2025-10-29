@@ -35,4 +35,25 @@ extern void delete_graph(Graph& graph, int n);
 // Display adj list
 extern void print_list(const std::vector<std::vector<int>> &list, const char *name);
 
+/**
+ * Depth-first search algorithm
+ * @param v Vertex
+ * @param graph Graph
+ * @param visited Array of visited vertices
+ */
+extern void DFS(int v, const Graph& graph, bool* visited);
+
+// Preparation algorithm for DFS
+extern void prep(const Graph& graph, int vert);
+
+// Preparation algorithm for DFS (list representation)
+extern void prep_list(const Graph& graph, int vert);
+
+/**
+ * Depth-first search algorithm for adjacency list
+ * @param v Vertex
+ * @param graph Graph
+ * @param visited Array of visited vertices
+ */
+extern void DFS_list(int v, const Graph& graph, bool* visited);
 #endif //GRAPH_GEN_H
