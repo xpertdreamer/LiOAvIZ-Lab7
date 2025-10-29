@@ -50,17 +50,46 @@ Graph create_graph(const int n, const double edgeProb, const double loopProb, co
 }
 
 void print_matrix(int **matrix, const int rows, const int cols, const char *name) {
-    std::cout << name << ": " << std::endl;
-    for (int i = 0; i < cols + 1; i++)
-        i == 0 ? std::cout << std::setw(4) << " " : std::cout << std::setw(2) << " " << i - 1;
-    std::cout << std::endl;
-    for (int i = 0; i < cols + 1; i++)
-        i == 0 ? std::cout << std::setw(5) << " " : std::cout << std::setw(2) << "---";
-    std::cout << std::endl;
+    if (!matrix || rows <= 0 || cols <= 0) {
+        std::cout << "Invalid matrix parameters" << std::endl;
+        return;
+    }
+
+    std::cout << name << ":" << std::endl;
+
+    // Calculate maximum width needed for numbers
+    int max_num_width = 1;
     for (int i = 0; i < rows; i++) {
-        std::cout << std::setw(3) << i << " |";
         for (int j = 0; j < cols; j++) {
-            std::cout << std::setw(2) << matrix[i][j] << " ";
+            if (const int num_width = static_cast<int>(std::to_string(matrix[i][j]).length()); num_width > max_num_width) {
+                max_num_width = num_width;
+            }
+        }
+    }
+
+    // Calculate width for row indices
+    const int row_index_width = static_cast<int>(std::to_string(rows - 1).length());
+    max_num_width = std::max(max_num_width, 2);
+
+    // Print column headers with dynamic spacing
+    std::cout << std::setw(row_index_width + 2) << " ";
+    for (int j = 0; j < cols; j++) {
+        std::cout << std::setw(max_num_width + 1) << j;
+    }
+    std::cout << std::endl;
+
+    // Print separator line
+    std::cout << std::setw(row_index_width + 2) << " " << "+";
+    for (int j = 0; j < cols; j++) {
+        std::cout << std::string(max_num_width + 1, '-');
+    }
+    std::cout << std::endl;
+
+    // Print matrix rows with borders
+    for (int i = 0; i < rows; i++) {
+        std::cout << std::setw(row_index_width) << i << " |";
+        for (int j = 0; j < cols; j++) {
+            std::cout << std::setw(max_num_width + 1) << matrix[i][j];
         }
         std::cout << std::endl;
     }
