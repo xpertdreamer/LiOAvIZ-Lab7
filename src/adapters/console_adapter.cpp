@@ -148,7 +148,7 @@ void GraphConsoleAdapter::register_graph_commands() {
     console.register_command("DFS",
         [this](const std::vector<std::string>& args) { this->cmd_traversal(args); },
         "DFS traversal",
-        {"vertex, --representation (m || l)", "--method (r || i)"},
+        {"vertex", " --representation (m || l)", "--method (r || i)"},
         "DFS <v> <--representation> <--method>"
     );
 }
@@ -231,17 +231,12 @@ void GraphConsoleAdapter::cmd_traversal(const std::vector<std::string> &args) co
         return;
     }
 
-    if (args.size() < 3 || args.size() > 3) {
-        std::cout << "Usage: DFS <v> <representation> <method>" << std::endl;
-        return;
-    }
-
     try {
-        const auto v = std::stoi(args[0]);
-        const auto& rep = args[1];
-        const auto& method = args[2];
+        const int v = args.empty() ? 0 : std::stoi(args[0]);
+        const std::string rep = args.size() > 1 ? args[1] : "--m";
+        const std::string method = args.size() > 2 ? args[2] : "--r";
 
-        if (v > graph->n || v < 0) {
+        if (v >= graph->n || v < 0) {
             std::cout << "Invalid number of vertices." << std::endl;
             return;
         }
