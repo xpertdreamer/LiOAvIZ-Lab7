@@ -40,20 +40,22 @@ extern void print_list(const std::vector<std::vector<int>> &list, const char *na
  * @param v Vertex
  * @param graph Graph
  * @param visited Array of visited vertices
+ * @param is_recursive Method of traversal (recursive or iterative)
  */
-extern void DFS(int v, const Graph& graph, bool* visited);
+extern void DFS(int v, const Graph& graph, bool* visited, bool is_recursive);
 
 // Preparation algorithm for DFS
-extern void prep(const Graph& graph, int vert);
+extern void prep(const Graph& graph, int vert, bool is_recursive);
 
 // Preparation algorithm for DFS (list representation)
-extern void prep_list(const Graph& graph, int vert);
+extern void prep_list(const Graph& graph, int vert, bool is_recursive);
 
 /**
  * Depth-first search algorithm for adjacency list
  * @param v Vertex
  * @param graph Graph
  * @param visited Array of visited vertices
+ * @param is_recursive Method of traversal (recursive or iterative)
  */
-extern void DFS_list(int v, const Graph& graph, bool* visited);
+extern void DFS_list(int v, const Graph& graph, bool* visited, bool is_recursive);
 #endif //GRAPH_GEN_H

@@ -148,8 +148,8 @@ void GraphConsoleAdapter::register_graph_commands() {
     console.register_command("DFS",
         [this](const std::vector<std::string>& args) { this->cmd_traversal(args); },
         "DFS traversal",
-        {"vertex, --representation"},
-        "DFS <v> <--representation>"
+        {"vertex, --representation (m || l)", "--method (r || i)"},
+        "DFS <v> <--representation> <--method>"
     );
 }
 
@@ -231,23 +231,30 @@ void GraphConsoleAdapter::cmd_traversal(const std::vector<std::string> &args) co
         return;
     }
 
-    if (args.size() < 2 || args.size() > 2) {
-        std::cout << "Usage: DFS <v> <representation>" << std::endl;
+    if (args.size() < 3 || args.size() > 3) {
+        std::cout << "Usage: DFS <v> <representation> <method>" << std::endl;
         return;
     }
 
     try {
         const auto v = std::stoi(args[0]);
         const auto& rep = args[1];
+        const auto& method = args[2];
+
         if (v > graph->n || v < 0) {
             std::cout << "Invalid number of vertices." << std::endl;
             return;
         }
-        if (rep != "--list" && rep != "--matrix") {
+        if (rep != "--l" && rep != "--m") {
             std::cout << "Invalid representation." << std::endl;
             return;
         }
-        rep == "--matrix" ? prep(*graph, v) : prep_list(*graph, v);
+        if (method != "--r"  && method != "--i") {
+            std::cout << "Invalid method." << std::endl;
+            return;
+        }
+        const bool m = method == "--r";
+        rep == "--m" ? prep(*graph, v, m) : prep_list(*graph, v, m);
     } catch (const std::exception& e) {
         std::cout << "Error DFS: " << e.what() << std::endl;
     }

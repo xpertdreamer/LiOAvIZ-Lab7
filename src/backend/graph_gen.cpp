@@ -3,6 +3,7 @@
 #include "../../include/backend/graph_gen.h"
 
 #include <chrono>
+#include <stack>
 
 Graph create_graph(const int n, const double edgeProb, const double loopProb, const unsigned int seed) {
     Graph graph;
@@ -79,54 +80,96 @@ void print_list(const std::vector<std::vector<int> > &list, const char* name) {
     }
 }
 
-void DFS(const int v, const Graph &graph, bool *visited) {
-    visited[v] = true;
+void DFS(const int v, const Graph &graph, bool *visited, const bool is_recursive) {
+    if (is_recursive == true) {
+        visited[v] = true;
 
-    std::cout << std::setw(3) << v << " ";
+        std::cout << std::setw(3) << v << " ";
 
-    for (int i = 0; i < graph.n; i++) {
-        if (graph.adj_matrix[v][i] == 1 && visited[i] == false) DFS(i, graph, visited);
+        for (int i = 0; i < graph.n; i++) {
+            if (graph.adj_matrix[v][i] == 1 && visited[i] == false) DFS(i, graph, visited, is_recursive);
+        }
+    } else {
+        std::stack<int> stack;
+        stack.push(v);
+
+        while (!stack.empty()) {
+            const int current = stack.top();
+            stack.pop();
+
+            if (visited[current] == false) {
+                visited[current] = true;
+                std::cout << std::setw(3) << current << " ";
+
+                for (int i = graph.n - 1; i >= 0; i--) {
+                    if (graph.adj_matrix[current][i] == 1 && visited[i] == false) {
+                        stack.push(i);
+                    }
+                }
+            }
+        }
     }
 }
 
-extern void prep(const Graph& graph, const int vert) {
+void prep(const Graph& graph, const int vert, const bool is_recursive) {
     const auto visited = new bool[graph.n];
     for (int i = 0; i < graph.n; i++) {
         visited[i] = false;
     }
-
-    for (int v = vert; v < graph.n; v++) {
-        if (visited[v] == false) {
-            DFS(v, graph, visited);
+    if (is_recursive == true) {
+        for (int v = vert; v < graph.n; v++) {
+            if (visited[v] == false) {
+                DFS(v, graph, visited, is_recursive);
+            }
         }
-    }
+    } else DFS(vert, graph, visited, is_recursive);
 
     std::cout << std::endl;
     delete[] visited;
 }
 
-void DFS_list(const int v, const Graph &graph, bool *visited) {
-    visited[v] = true;
-    std::cout << std::setw(3) << v << " ";
+void DFS_list(const int v, const Graph &graph, bool *visited, const bool is_recursive) {
+    if (is_recursive == true) {
+        visited[v] = true;
+        std::cout << std::setw(3) << v << " ";
 
-    for (const int neighbour : graph.adj_list[v]) {
-        if (visited[neighbour] == false) {
-            DFS_list(neighbour, graph, visited);
+        for (const int neighbour : graph.adj_list[v]) {
+            if (visited[neighbour] == false) {
+                DFS_list(neighbour, graph, visited, is_recursive);
+            }
+        }
+    } else {
+        std::stack<int> stack;
+        stack.push(v);
+
+        while (!stack.empty()) {
+            const int current = stack.top();
+            stack.pop();
+            if (visited[current] == false) {
+                visited[current] = true;
+                std::cout << std::setw(3) << current << " ";
+
+                const auto& neighbours = graph.adj_list[current];
+                for (int i = static_cast<int>(neighbours.size()) - 1; i >= 0; i--) {
+                    if (int neighbour = neighbours[i]; visited[neighbour] == false) stack.push(neighbour);
+                }
+            }
         }
     }
 }
 
-void prep_list(const Graph &graph, const int vert) {
+void prep_list(const Graph &graph, const int vert, const bool is_recursive) {
     const auto visited = new bool[graph.n];
     for (int i = 0; i < graph.n; i++) {
         visited[i] = false;
     }
-
-    for (int v = vert; v < graph.n; v++) {
-        if (visited[v] == false) {
-            DFS_list(v, graph, visited);
+    if (is_recursive == true) {
+        for (int v = vert; v < graph.n; v++) {
+            if (visited[v] == false) {
+                DFS_list(v, graph, visited, is_recursive);
+            }
         }
-    }
+    } else DFS_list(vert, graph, visited, is_recursive);
 
     std::cout << std::endl;
     delete[] visited;
