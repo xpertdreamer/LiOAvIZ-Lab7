@@ -51,7 +51,11 @@ Graph create_graph(const int n, const double edgeProb, const double loopProb, co
 
 void print_matrix(int **matrix, const int rows, const int cols, const char *name) {
     std::cout << name << ": " << std::endl;
+    for (int i = 0; i < cols + 1; i++)
+        i == 0 ? std::cout << std::setw(4) << " " : std::cout << std::setw(2) << " " << i - 1;
+    std::cout << std::endl;
     for (int i = 0; i < rows; i++) {
+        std::cout << std::setw(3) << i << " |";
         for (int j = 0; j < cols; j++) {
             std::cout << std::setw(2) << matrix[i][j] << " ";
         }
