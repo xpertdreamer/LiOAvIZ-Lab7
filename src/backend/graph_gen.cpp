@@ -9,6 +9,7 @@ Graph create_graph(const int n, const double edgeProb, const double loopProb, co
     Graph graph;
     graph.n = n;
 
+    // Формируем матрицу -> выводим -> все подряд
     // Matrix memory allocating
     graph.adj_matrix = new int*[n];
     for (int i = 0; i < n; i++) {

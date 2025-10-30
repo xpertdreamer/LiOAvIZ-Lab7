@@ -154,15 +154,11 @@ void GraphConsoleAdapter::register_graph_commands() {
 }
 
 void GraphConsoleAdapter::cmd_create(const std::vector<std::string>& args) {
-    if (args.size() < 3) {
-        std::cout << "Usage: create <n> <edgeProb> <loopProb>" << std::endl;
-        return;
-    }
-
     try {
-        const int new_n = std::stoi(args[0]);
-        const double new_edge_prob = std::stod(args[1]);
-        const double new_loop_prob = std::stod(args[2]);
+        const int new_n = args.empty() ? 5 : std::stoi(args[0]);
+        const double new_edge_prob = args.size() > 1 ?  std::stod(args[1]) : 0.5;
+        const double new_loop_prob = args.size() > 2 ?  std::stod(args[2]) : 0.3;
+
 
         if (new_n <= 0) {
             std::cout << "Invalid number of vertices." << std::endl;
@@ -238,6 +234,20 @@ void GraphConsoleAdapter::cmd_traversal(const std::vector<std::string> &args) co
 
         if (v >= graph->n || v < 0) {
             std::cout << "Invalid number of vertices." << std::endl;
+            return;
+        }
+        if (args[1] == "all") {
+            cmd_print();
+            std::cout << "===Recursive operations===" << std::endl;
+            std::cout << "Matrix traversal:" << std::endl;
+            prep(*graph, v, true);
+            std::cout << "List traversal:" << std::endl;
+            prep_list(*graph, v, true);
+            std::cout << "===Iterative operations===" << std::endl;
+            std::cout << "Matrix traversal:" << std::endl;
+            prep(*graph, v, false);
+            std::cout << "List traversal:" << std::endl;
+            prep_list(*graph, v, false);
             return;
         }
         if (rep != "--l" && rep != "--m") {
